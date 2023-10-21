@@ -27,6 +27,10 @@ public class Config {
         return new LeaveTeamUseCase(gradeDB);
     }
 
+    public GetMyTeamUseCase getMyTeamUseCase() {
+        return new GetMyTeamUseCase(gradeDB);
+    }
+
     public GetAverageGradeUseCase getAverageGradeUseCase () {
         return new GetAverageGradeUseCase(gradeDB);
     }
