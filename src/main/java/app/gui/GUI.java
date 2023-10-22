@@ -3,11 +3,13 @@ package app.gui;
 import api.MongoGradeDB;
 import app.Config;
 import entity.Grade;
+import entity.Team;
 import use_case.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.String;
+import java.util.Arrays;
 
 public class GUI {
     public static void main(String[] args) {
@@ -23,6 +25,7 @@ public class GUI {
         FormTeamUseCase formTeamUseCase = config.formTeamUseCase();
         JoinTeamUseCase joinTeamUseCase = config.joinTeamUseCase();
         LeaveTeamUseCase leaveTeamUseCase = config.leaveTeamUseCase();
+        GetMyTeamUseCase getMyTeamUseCase = config.getMyTeamUseCase();
         GetAverageGradeUseCase getAverageGradeUseCase = config.getAverageGradeUseCase();
 
         // this is the code that runs to set up our GUI
@@ -39,7 +42,7 @@ public class GUI {
             JPanel logGradeCard = createLogGradeCard(frame, logGradeUseCase);
             JPanel formTeamCard = createFormTeamCard(frame, formTeamUseCase);
             JPanel joinTeamCard = createJoinTeamCard(frame, joinTeamUseCase);
-            JPanel manageTeamCard = createManageTeamCard(frame, leaveTeamUseCase, getAverageGradeUseCase);
+            JPanel manageTeamCard = createManageTeamCard(frame, leaveTeamUseCase, getAverageGradeUseCase, getMyTeamUseCase);
 
             cardPanel.add(defaultCard, "DefaultCard");
             cardPanel.add(getGradeCard, "GetGradeCard");
@@ -216,12 +219,14 @@ public class GUI {
 
 
     private static JPanel createManageTeamCard(JFrame jFrame, LeaveTeamUseCase leaveTeamUseCase,
-                                               GetAverageGradeUseCase getAverageGradeUseCase) {
+                                               GetAverageGradeUseCase getAverageGradeUseCase,
+                                               GetMyTeamUseCase getMyTeamUseCase) {
         JPanel theCard = new JPanel();
         theCard.setLayout(new GridLayout(4, 2));
         JTextField courseField = new JTextField(20);
         // make a separate line.
         JButton getAverageButton = new JButton("Get Average Grade");
+        JButton getMyTeamButton = new JButton("Get My Team");
         JButton leaveTeamButton = new JButton("Leave Team");
         JLabel resultLabel = new JLabel();
 
@@ -237,6 +242,23 @@ public class GUI {
             }
         });
 
+        getMyTeamButton.addActionListener(e -> {
+            try {
+                Team team = getMyTeamUseCase.getMyTeam();
+                String[] membersArray = team.getMembers();
+                String[] members = new String[membersArray.length];
+                for (int i = 0; i < membersArray.length; i++) {
+                    if (i == 0) {
+                        members[i] = membersArray[i];
+                    } else {
+                        members[i] = "\n" + membersArray[i];
+                    }
+                }
+                JOptionPane.showMessageDialog(jFrame, team.toString() + "\n" + Arrays.toString(members));
+            } catch (RuntimeException ex) {
+                JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+            }
+        });
 
         leaveTeamButton.addActionListener(e -> {
             try {
@@ -249,6 +271,7 @@ public class GUI {
         theCard.add(new JLabel("The Course you want to calculate the team average for:"));
         theCard.add(courseField);
         theCard.add(getAverageButton);
+        theCard.add(getMyTeamButton);
         theCard.add(leaveTeamButton);
         theCard.add(resultLabel);
 
