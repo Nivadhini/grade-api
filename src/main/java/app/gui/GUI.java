@@ -254,7 +254,7 @@ public class GUI {
                         members[i] = "\n" + membersArray[i];
                     }
                 }
-                JOptionPane.showMessageDialog(jFrame, team.toString() + "\n" + Arrays.toString(members));
+                JOptionPane.showMessageDialog(jFrame, team + "\n" + Arrays.toString(members));
             } catch (RuntimeException ex) {
                 JOptionPane.showMessageDialog(jFrame, ex.getMessage());
             }
